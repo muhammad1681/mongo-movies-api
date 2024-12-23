@@ -35,10 +35,10 @@ router.get("/search", async function(req, res, next){
 
 
 router.post("/add-movie", async (req, res) => {
-  const { title, director, releaseYear, genre } = req.body;
+  const { title, director, releaseYear, genre, stars, review } = req.body;
 
   try {
-    const movie = new Movie({ title, director, releaseYear, genre });
+    const movie = new Movie({ title, director, releaseYear, genre, stars, review });
     await movie.save();
     res.status(201).json(movie);
   } catch (err) {
