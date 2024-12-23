@@ -66,4 +66,25 @@ router.post("/add-movie", async (req, res) => {
   }
 });
 
+router.delete("/delete", async (req, res) => {
+  const id = req.headers['id'];
+  if(!id) res.status(400).json({error: "missing header of id. please provide a movie id"});
+
+  try{
+    const movieToDel = await Movie.findOne({id:id});
+    if(movieToDel === null){
+      res.status(404).send({error: `Can not delete, no movie found with id '${id}'`});
+      return;
+    } 
+
+    const result = await Movie.deleteOne({id:id});
+    console.log(result);
+    res.status(200).json({message: "movie deleted"});
+  }catch(err){
+    console.log(err);
+    res.status(500).json({error: err});
+  }
+
+})
+
 module.exports = router;
