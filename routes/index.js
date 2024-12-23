@@ -68,7 +68,10 @@ router.post("/add-movie", async (req, res) => {
 
 router.delete("/delete", async (req, res) => {
   const id = req.headers['id'];
-  if(!id) res.status(400).json({error: "missing header of id. please provide a movie id"});
+  if(!id) {
+    res.status(400).json({error: "missing header of id. please provide a movie id"});
+    return;
+  }
 
   try{
     const movieToDel = await Movie.findOne({id:id});
@@ -84,7 +87,39 @@ router.delete("/delete", async (req, res) => {
     console.log(err);
     res.status(500).json({error: err});
   }
+});
 
-})
+router.patch("/update/:id", async (req, res) => {
+  const id = req.params.id;
+  // const {title, releaseYear, director, stars, review} = req.body;
+
+  if(!id || !req.body){
+    return res.status(400).json({error: "Missing param, please provide an id"});
+  }
+
+  const movieToUpdate = await Movie.findOne({id:id});
+  if(!movieToUpdate){
+    res.status(404).json({error: `Can not update, no movie found with id '${id}`});
+    return;
+  }
+
+  const movieId = movieToUpdate._id;
+
+  try{
+    const updatedMovie = await Movie.findByIdAndUpdate(movieId, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    if(!updatedMovie){
+      return res.status(404).json({ message: "Movie not found" });
+    }
+
+    res.status(200).json(updatedMovie);
+  }catch(err){
+    console.log(err);
+    res.status(500).json({ message: "Error updating movie" });
+  }
+});
 
 module.exports = router;
