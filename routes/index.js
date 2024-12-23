@@ -12,6 +12,25 @@ router.get("/get-all-movies", async function(req, res, next){
   }
 });
 
+router.get("/get-by-id", async (req, res) => {
+  const id = req.headers['id'];
+  if(!id) res.status(400).json({error: "missing header of 'id'"});
+  
+  try{
+    const movie = await Movie.findOne({id: id})
+
+    if(movie === null){
+      res.status(404).json({error: `No movies found with id of ${id}`});
+      return;
+    }
+
+    res.status(200).json(movie);
+  }catch(err){
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 router.get("/search", async function(req, res, next){
   const search = req.headers['search-value'];
   if(!search){
