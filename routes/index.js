@@ -23,16 +23,15 @@ router.get("/search", async function(req, res, next){
   
   try{
     const searchedMovies = await Movie.find({
-      title: { $regex: search, $options: 'i' } // 'i' for case-insensitive search
+      title: { $regex: search, $options: 'i' }
     });
 
     res.status(200).json(searchedMovies);
-
   }catch(err){
     console.log(err);
     res.status(400).send(err);
   }
-})
+});
 
 
 router.post("/add-movie", async (req, res) => {
