@@ -54,17 +54,37 @@ router.get("/search", async function(req, res, next){
 
 
 router.post("/add-movie", async (req, res) => {
-  const { title, director, releaseYear, genre, stars, review } = req.body;
+  const { 
+    title, 
+    releaseYear, 
+    rated = null, 
+    actors, 
+    plot = null, 
+    director, 
+    stars, 
+    posterUrl = null 
+  } = req.body;
 
   try {
-    const movie = new Movie({ title, director, releaseYear, genre, stars, review });
+    const movie = new Movie({
+      title,
+      releaseYear,
+      rated,
+      actors,
+      plot,
+      director,
+      stars,
+      posterUrl
+    });
+
     await movie.save();
     res.status(201).json(movie);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(400).send(err);
   }
 });
+
 
 router.delete("/delete", async (req, res) => {
   const id = req.headers['id'];

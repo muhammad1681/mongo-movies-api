@@ -4,9 +4,9 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 const movieSchema = new mongoose.Schema({
     title: { type: String, required: true, unique: true },
     releaseYear: { type: Number, required: true },
-    rated: { type: String, required: false },
+    rated: { type: String, required: false, default: null },
     actors: { type: String, requred: true },
-    plot: {type: String, requred: false},
+    plot: {type: String, requred: false, default: null},
     director: { type: String, required: true },
     stars: {
         type: Number,
@@ -14,7 +14,7 @@ const movieSchema = new mongoose.Schema({
         min: 1,
         max: 5, 
     },
-    posterUrl: { type: String, required: false },
+    posterUrl: { type: String, required: false, default: null },
 });
   
 
